@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- load parameter -->
+  <xacro:property name="vehicle_info" value="${xacro.load_yaml('$(find autosdv_vehicle_description)/config/vehicle_info.param.yaml')}"/>
+
+  <!-- vehicle body -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="${vehicle_info['/**']['ros__parameters']['wheel_base']/2.0} 0 0" rpy="${pi/2.0} 0 ${pi}"/>
+      <geometry>
+        <box size="0 0 0"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <link name="car_link">
+		<visual>
+		    <origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.421 0.306 0.262"/>
+			</geometry>
+		</visual>	
+	</link>
+
+  <joint name="car_joint" type="fixed">
+    	<parent link="base_link"/>
+    	<child link="car_link"/>
+    	<origin xyz="0.1593 0 0.131" rpy="0 0 0"/>
+	</joint>
+    
+</robot>
