@@ -1,0 +1,6 @@
+# temporary files
+*~
+.*~
+*.sw[op]
+\#*#
+.vscode/
