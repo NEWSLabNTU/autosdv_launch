@@ -1,0 +1,44 @@
+<launch>
+  <arg name="launch_driver" default="true"/>
+  <arg name="lidar_model" default="vlp32c" description="cube1, robin-w, or vlp32c"/>
+  <!-- <arg name="host_ip" default="192.168.26.1"/> -->
+  <arg name="use_concat_filter" default="true"/>
+  <arg name="vehicle_id" default="$(env VEHICLE_ID default)"/>
+  <arg name="vehicle_mirror_param_file" default="$(find-pkg-share autosdv_vehicle_description)/config/mirror.param.yaml"/>
+  <arg name="pointcloud_container_name" default="pointcloud_container"/>
+  <arg name="robin_w_device_ip" default="172.168.1.10"/>
+  <arg name="vlp32c_device_ip" default="192.168.7.10"/>
+
+  <group>
+    <push-ros-namespace namespace="lidar"/>
+
+    <group>
+      <group if="$(eval &quot;'$(var lidar_model)'=='cube1'&quot;)">
+	<include file="$(find-pkg-share autosdv_sensor_kit_launch)/launch/cube1.launch.py" if="$(var launch_driver)">
+	</include>
+      </group>
+
+      <group if="$(eval &quot;'$(var lidar_model)'=='robin-w'&quot;)">
+	<include file="$(find-pkg-share autosdv_sensor_kit_launch)/launch/seyond_robin_w.launch.xml" if="$(var launch_driver)">
+          <arg name="device_ip" value="$(var robin_w_device_ip)"/>
+          <arg name="frame_id" value="robin_w"/>
+	</include>
+      </group>
+
+      <group if="$(eval &quot;'$(var lidar_model)'=='vlp32c'&quot;)">
+        <include file="$(find-pkg-share nebula_ros)/launch/velodyne_launch_all_hw.xml">
+          <arg name="sensor_model" value="VLP32"/>
+          <arg name="launch_hw" value="$(var launch_driver)"/>
+          <arg name="config_file" value="$(find-pkg-share autosdv_sensor_kit_launch)/config/VLP32.param.yaml"/>
+        </include>
+      </group>
+    </group>
+
+    <include file="$(find-pkg-share autosdv_sensor_kit_launch)/launch/pointcloud_preprocessor.launch.py">
+      <arg name="base_frame" value="base_link"/>
+      <arg name="use_intra_process" value="true"/>
+      <arg name="use_multithread" value="true"/>
+      <arg name="pointcloud_container_name" value="$(var pointcloud_container_name)"/>
+    </include>
+  </group>
+</launch>
