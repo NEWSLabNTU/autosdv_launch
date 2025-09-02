@@ -54,7 +54,7 @@ launch:
       name: lidar_model
       value: vlp32c  # cube1, robin-w, or vlp32c
 - include:
-    file: "$(find-pkg-share autosdv_launch)/launch/autosdv_monitor.launch.yaml"
+    file: "$(find-pkg-share autosdv_system_monitor)/launch/autosdv_system_monitor.launch.yaml"
 - node:
     pkg: rqt_runtime_monitor
     exec: rqt_runtime_monitor
